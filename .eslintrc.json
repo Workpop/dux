@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "@workpop/eslint-config-workpop",
+    "plugin:import/errors"
+  ],
+  "rules": {
+    "arrow-body-style": 0
+  }
+}
