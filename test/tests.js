@@ -14,7 +14,7 @@ describe('Reducer Utils', function () {
     const enhancedReducer = composeReducer(
       withSet(SET),
       withClear(CLEAR),
-      reducer,
+      reducer
     );
 
     const enhancedReducerAlt = compose(
@@ -53,7 +53,7 @@ describe('Reducer Utils', function () {
 
     const enhancedReducer = composeReducer(
       withSet(SET),
-      (state = 0) => state,
+      (state = 0) => state
     );
 
     const values = [
@@ -89,7 +89,7 @@ describe('Reducer Utils', function () {
           default:
             return state;
         }
-      },
+      }
     );
 
     const values = [
@@ -119,7 +119,7 @@ describe('Reducer Utils', function () {
 
     const enhancedReducer = composeReducer(
       withAdd(ADD),
-      (state = []) => state,
+      (state = []) => state
     );
 
     const values = [
