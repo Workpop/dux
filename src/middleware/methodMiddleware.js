@@ -1,14 +1,13 @@
 import { identity, noop } from 'lodash';
 
-
 /**
  * higher order reducer for method structures
  * @param featureName
  * @returns {Function}
  */
-export function composeMethodReducer(featureName: string) {
+export function composeMethodReducer(featureName) {
   return (reducer) => {
-    return (state: Object = {}, action: Object): Object => {
+    return (state = {}, action) => {
       const { type, readyState, data } = action;
       switch (type) {
         case `${featureName}`:
