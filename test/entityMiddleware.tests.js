@@ -3,11 +3,15 @@ import { expect } from 'chai';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { moveEntitiesMiddleware, composeMoveEntities, ENTITY_ACTIONS } from '../src/middleware/moveEntities';
 
-const testReducer = composeMoveEntities('test');
+function basicReducer(state, action) {
+  return state;
+}
+
+const testReducer = composeMoveEntities('test')(basicReducer);
 
 const rootReducer = combineReducers({
   test: testReducer,
-  other: composeMoveEntities('other'),
+  other: composeMoveEntities('other')(basicReducer),
 });
 
 const store = createStore(rootReducer, {

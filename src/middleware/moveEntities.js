@@ -15,61 +15,63 @@ const ENTITY_TYPES = {
 //TODO: Integrate the HOC Reducers we have to manipulate this even more
 
 export function composeMoveEntities(stateKey, entityType = ENTITY_TYPES.LIST) {
-  return function moveEntities(state, action = {}) {
-    let initialState;
-    if (entityType === ENTITY_TYPES.LIST) {
-      initialState = {
-        data: [],
-      };
-    }
-    const { data } = action;
-    const currentState = state || initialState;
-    // grab current data
-    const currentData = get(currentState, 'data');
-    let mergedData;
-    switch (action.type) {
-      case `${stateKey}_${ENTITY_ACTIONS.ADD}`:
-        if (entityType === ENTITY_TYPES.LIST) {
-          // before we add, we need to check if this item exists already
-          const hasItem = find(currentData, (item) => {
-            return get(item, '_id') === get(data, '_id');
-          });
-          if (!isUndefined(hasItem)) {
-            console.error('Duplicate Entity Insert Attempted. Error, returning original state'); // eslint-disable-line no-console
-            return state;
+  return (reducer) => {
+    return function moveEntities(state, action = {}) {
+      let initialState;
+      if (entityType === ENTITY_TYPES.LIST) {
+        initialState = {
+          data: [],
+        };
+      }
+      const { data } = action;
+      const currentState = state || initialState;
+      // grab current data
+      const currentData = get(currentState, 'data');
+      let mergedData;
+      switch (action.type) {
+        case `${stateKey}_${ENTITY_ACTIONS.ADD}`:
+          if (entityType === ENTITY_TYPES.LIST) {
+            // before we add, we need to check if this item exists already
+            const hasItem = find(currentData, (item) => {
+              return get(item, '_id') === get(data, '_id');
+            });
+            if (!isUndefined(hasItem)) {
+              console.error('Duplicate Entity Insert Attempted. Error, returning original state'); // eslint-disable-line no-console
+              return state;
+            }
+            mergedData = {
+              data: [...currentData, data],
+            };
+            return Object.assign({}, currentState, mergedData);
           }
-          mergedData = {
-            data: [...currentData, data],
-          };
-          return Object.assign({}, currentState, mergedData);
-        }
-        return;
-      case `${stateKey}_${ENTITY_ACTIONS.UPDATE}`:
-        if (entityType === ENTITY_TYPES.LIST) {
-          mergedData = {
-            data: map(currentData, (item) => {
-              if (get(item, '_id') === get(data, '_id')) {
-                return data;
-              }
-              return item;
-            }),
-          };
-          return Object.assign({}, currentState, mergedData);
-        }
-        return;
-      case `${stateKey}_${ENTITY_ACTIONS.REMOVE}`:
-        if (entityType === ENTITY_TYPES.LIST) {
-          mergedData = {
-            data: reject(currentData, (item) => {
-              return get(item, '_id') === data;
-            }),
-          };
-          return Object.assign({}, currentState, mergedData);
-        }
-        return;
-      default:
-        return currentState;
-    }
+          return;
+        case `${stateKey}_${ENTITY_ACTIONS.UPDATE}`:
+          if (entityType === ENTITY_TYPES.LIST) {
+            mergedData = {
+              data: map(currentData, (item) => {
+                if (get(item, '_id') === get(data, '_id')) {
+                  return data;
+                }
+                return item;
+              }),
+            };
+            return Object.assign({}, currentState, mergedData);
+          }
+          return;
+        case `${stateKey}_${ENTITY_ACTIONS.REMOVE}`:
+          if (entityType === ENTITY_TYPES.LIST) {
+            mergedData = {
+              data: reject(currentData, (item) => {
+                return get(item, '_id') === data;
+              }),
+            };
+            return Object.assign({}, currentState, mergedData);
+          }
+          return;
+        default:
+          return reducer(currentState, action);
+      }
+    };
   };
 }
 
