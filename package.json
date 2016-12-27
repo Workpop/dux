@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "release": "standard-version",
     "prepublish": "babel ./src --ignore test --out-dir ./dist",
     "lint": "eslint ./src",
     "fix": "eslint ./src --fix",
@@ -33,7 +34,8 @@
     "mocha": "^3.1.2",
     "pre-commit": "^1.1.3",
     "redux": "^3.6.0",
-    "reselect": "^2.5.4"
+    "reselect": "^2.5.4",
+    "standard-version": "^4.0.0"
   },
   "dependencies": {
     "babel-runtime": "6.x.x"
