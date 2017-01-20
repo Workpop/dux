@@ -38,7 +38,7 @@
     "standard-version": "^4.0.0"
   },
   "dependencies": {
-    "babel-runtime": "6.x.x"
+    "babel-runtime": "^6.22.0"
   },
   "peerDependencies": {
     "lodash": "^4.x.x",
