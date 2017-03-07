@@ -6,13 +6,15 @@ import { merge } from 'lodash';
  * @returns {reducerComposer}
  */
 export function withClear(TYPE) {
-  return reducer => (state, action = {}) => {
-    switch (action.type) {
-      case TYPE:
-        return reducer();
-      default:
-        return reducer(state, action);
-    }
+  return (reducer) => {
+    return (state, action = {}) => {
+      switch (action.type) {
+        case TYPE:
+          return reducer();
+        default:
+          return reducer(state, action);
+      }
+    };
   };
 }
 
@@ -23,13 +25,15 @@ export function withClear(TYPE) {
  * @returns {reducerComposer}
  */
 export function withSet(TYPE) {
-  return reducer => (state, action = {}) => {
-    switch (action.type) {
-      case TYPE:
-        return action.data;
-      default:
-        return reducer(state, action);
-    }
+  return (reducer) => {
+    return (state, action = {}) => {
+      switch (action.type) {
+        case TYPE:
+          return action.data;
+        default:
+          return reducer(state, action);
+      }
+    };
   };
 }
 
@@ -40,12 +44,14 @@ export function withSet(TYPE) {
  * @returns {reducerComposer}
  */
 export function withMerge(TYPE) {
-  return reducer => (state = {}, action = {}) => {
-    switch (action.type) {
-      case TYPE:
-        return merge(state, action.data);
-      default:
-        return reducer(state, action);
-    }
+  return (reducer) => {
+    return (state = {}, action = {}) => {
+      switch (action.type) {
+        case TYPE:
+          return merge(state, action.data);
+        default:
+          return reducer(state, action);
+      }
+    };
   };
 }
