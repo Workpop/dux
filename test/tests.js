@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { withSet, withClear, composeReducer, withAdd } from '../src';
+import { withSet, withClear, composeAll, withAdd } from '../src';
 import { flowRight as compose } from 'lodash';
 describe('Reducer Utils', function () {
   it('should compose enhancers together', function () {
@@ -11,11 +11,10 @@ describe('Reducer Utils', function () {
       return state;
     };
 
-    const enhancedReducer = composeReducer(
+    const enhancedReducer = composeAll(
       withSet(SET),
       withClear(CLEAR),
-      reducer
-    );
+    )('default');
 
     const enhancedReducerAlt = compose(
       withSet(SET),
@@ -51,10 +50,9 @@ describe('Reducer Utils', function () {
 
     const SET = 'SET';
 
-    const enhancedReducer = composeReducer(
+    const enhancedReducer = composeAll(
       withSet(SET),
-      (state = 0) => state
-    );
+    )(0);
 
     const values = [
       'test one',
@@ -80,7 +78,7 @@ describe('Reducer Utils', function () {
     const CLEAR = 'CLEAR';
     const defaultState = Math.round(1000 * Math.random());
 
-    const enhancedReducer = composeReducer(
+    const enhancedReducer = composeAll(
       withClear(CLEAR),
       (state = defaultState, action = {}) => {
         switch(action.type) {
@@ -90,7 +88,7 @@ describe('Reducer Utils', function () {
             return state;
         }
       }
-    );
+    )(defaultState);
 
     const values = [
       'test one',
@@ -117,10 +115,9 @@ describe('Reducer Utils', function () {
 
     const ADD = 'ADD';
 
-    const enhancedReducer = composeReducer(
+    const enhancedReducer = composeAll(
       withAdd(ADD),
-      (state = []) => state
-    );
+    )([]);
 
     const values = [
       'test one',
