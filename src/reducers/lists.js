@@ -61,13 +61,15 @@ function findActionIndex(state, {query, index} = {}) {
  * @returns {reducerComposer}
  */
 export function withRemove(TYPE) {
-  return reducer => (state = [], action = {}) => {
-    switch (action.type) {
-      case TYPE:
-        return rejector(state, action);
-      default:
-        return reducer(state, action);
-    }
+  return (reducer) => {
+    return (state = [], action = {}) => {
+      switch (action.type) {
+        case TYPE:
+          return rejector(state, action);
+        default:
+          return reducer(state, action);
+      }
+    };
   };
 }
 
@@ -79,13 +81,15 @@ export function withRemove(TYPE) {
  * @returns {reducerComposer}
  */
 export function withFilter(TYPE) {
-  return reducer => (state = [], action = {}) => {
-    switch (action.type) {
-      case TYPE:
-        return filterer(state, action);
-      default:
-        return reducer(state, action);
-    }
+  return (reducer) => {
+    return (state = [], action = {}) => {
+      switch (action.type) {
+        case TYPE:
+          return filterer(state, action);
+        default:
+          return reducer(state, action);
+      }
+    };
   };
 }
 
@@ -96,18 +100,20 @@ export function withFilter(TYPE) {
  * @returns {reducerComposer}
  */
 export function withAdd(TYPE) {
-  return reducer => (state = [], action = {}) => {
-    switch (action.type) {
-      case TYPE: {
-        const index = findActionIndex(state, action);
-        if (index < 0) {
-          return [...state, action.data];
+  return (reducer) => {
+    return (state = [], action = {}) => {
+      switch (action.type) {
+        case TYPE: {
+          const index = findActionIndex(state, action);
+          if (index < 0) {
+            return [...state, action.data];
+          }
+          return [...state.slice(0, index), action.data, ...state.slice(index)];
         }
-        return [...state.slice(0, index), action.data, ...state.slice(index)];
+        default:
+          return reducer(state, action);
       }
-      default:
-        return reducer(state, action);
-    }
+    };
   };
 }
 
@@ -118,18 +124,20 @@ export function withAdd(TYPE) {
  * @returns {reducerComposer}
  */
 export function withAddMany(TYPE) {
-  return reducer => (state = [], action = {}) => {
-    switch (action.type) {
-      case TYPE: {
-        const index = findActionIndex(state, action);
-        if (index < 0) {
-          return [...state, ...action.data];
+  return (reducer) => {
+    return (state = [], action = {}) => {
+      switch (action.type) {
+        case TYPE: {
+          const index = findActionIndex(state, action);
+          if (index < 0) {
+            return [...state, ...action.data];
+          }
+          return [...state.slice(0, index), ...action.data, ...state.slice(index)];
         }
-        return [...state.slice(0, index), ...action.data, ...state.slice(index)];
+        default:
+          return reducer(state, action);
       }
-      default:
-        return reducer(state, action);
-    }
+    };
   };
 }
 
@@ -140,19 +148,21 @@ export function withAddMany(TYPE) {
  * @returns {reducerComposer}
  */
 export function withMergeAt(TYPE) {
-  return reducer => (state = [], action = {}) => {
-    switch (action.type) {
-      case TYPE: {
-        const index = findActionIndex(state, action);
-        if (index < 0) {
-          return state;
+  return (reducer) => {
+    return (state = [], action = {}) => {
+      switch (action.type) {
+        case TYPE: {
+          const index = findActionIndex(state, action);
+          if (index < 0) {
+            return state;
+          }
+          const merged = merge(state[index], action.data);
+          return [...state.slice(0, index), merged, ...state.slice(index + 1)];
         }
-        const merged = merge(state[index], action.data);
-        return [...state.slice(0, index), merged, ...state.slice(index + 1)];
+        default:
+          return reducer(state, action);
       }
-      default:
-        return reducer(state, action);
-    }
+    };
   };
 }
 
@@ -164,17 +174,19 @@ export function withMergeAt(TYPE) {
  * @returns {reducerComposer}
  */
 export function withSetAt(TYPE) {
-  return reducer => (state = [], action = {}) => {
-    switch (action.type) {
-      case TYPE: {
-        const index = findActionIndex(state, action);
-        if (index < 0) {
-          return state;
+  return (reducer) => {
+    return (state = [], action = {}) => {
+      switch (action.type) {
+        case TYPE: {
+          const index = findActionIndex(state, action);
+          if (index < 0) {
+            return state;
+          }
+          return [...state.slice(0, index), action.data, ...state.slice(index + 1)];
         }
-        return [...state.slice(0, index), action.data, ...state.slice(index + 1)];
+        default:
+          return reducer(state, action);
       }
-      default:
-        return reducer(state, action);
-    }
+    };
   };
 }
