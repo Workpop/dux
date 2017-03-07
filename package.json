@@ -1,6 +1,6 @@
 {
   "name": "@workpop/dux",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "HOC Redux Functions",
   "main": "dist/index.js",
   "directories": {
