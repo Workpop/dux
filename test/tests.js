@@ -1,7 +1,74 @@
 import { expect } from 'chai';
-import { withSet, withClear, composeAll, withAdd } from '../src';
+import { withSet, withClear, composeAll, withAdd, withLoading, withBoolean, withRemove, withFilter } from '../src';
 import { flowRight as compose } from 'lodash';
 describe('Reducer Utils', function () {
+
+  it('should support loading', function () {
+    const enhancedReducer = composeAll(
+      withLoading('TEST'),
+    )(false);
+
+    let testState = undefined;
+
+    const action = {
+      type: 'TEST_LOADING_START',
+    };
+
+    testState = enhancedReducer(testState, action);
+
+    expect(testState).to.eql(true);
+  });
+
+  it('should support boolean', function () {
+    const enhancedReducer = composeAll(
+      withBoolean('TEST'),
+    )(false);
+
+    let testState = undefined;
+
+    const action = {
+      type: 'TEST_ENABLED',
+    };
+
+    testState = enhancedReducer(testState, action);
+
+    expect(testState).to.eql(true);
+  });
+
+  it('should support remove', function () {
+    const enhancedReducer = composeAll(
+      withRemove('TEST_REMOVE'),
+    )([]);
+
+    let testState = ['holyMoly', 'hello', 'goodbye'];
+
+    const action = {
+      type: 'TEST_REMOVE',
+      index: 1,
+    };
+
+    testState = enhancedReducer(testState, action);
+
+    expect(testState).to.eql(['holyMoly', 'goodbye']);
+  });
+
+  it('should support filter', function () {
+    const enhancedReducer = composeAll(
+      withFilter('TEST_FILTER'),
+    )([]);
+
+    let testState = ['holyMoly', 'hello', 'goodbye'];
+
+    const action = {
+      type: 'TEST_FILTER',
+      index: 1,
+    };
+
+    testState = enhancedReducer(testState, action);
+
+    expect(testState).to.eql(['hello']);
+  });
+
   it('should compose enhancers together', function () {
 
     const SET = 'SET';
@@ -58,7 +125,7 @@ describe('Reducer Utils', function () {
       'test one',
       'test two',
       10,
-      {foo: 'bar'}
+      { foo: 'bar' }
     ];
 
     let testState = undefined;
@@ -81,7 +148,7 @@ describe('Reducer Utils', function () {
     const enhancedReducer = composeAll(
       withClear(CLEAR, defaultState),
       (state = defaultState, action = {}) => {
-        switch(action.type) {
+        switch (action.type) {
           case SET:
             return action.data;
           default:
@@ -94,7 +161,7 @@ describe('Reducer Utils', function () {
       'test one',
       'test two',
       10,
-      {foo: 'bar'}
+      { foo: 'bar' }
     ];
 
     let testState = undefined;
@@ -123,7 +190,7 @@ describe('Reducer Utils', function () {
       'test one',
       'test two',
       10,
-      {foo: 'bar'}
+      { foo: 'bar' }
     ];
 
     const valuesClone = [...values];
@@ -131,7 +198,7 @@ describe('Reducer Utils', function () {
     // get default
     let testState = enhancedReducer();
 
-    while(valuesClone.length) {
+    while (valuesClone.length) {
       testState = enhancedReducer(testState, {
         type: ADD,
         data: valuesClone.shift(),
