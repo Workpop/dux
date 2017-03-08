@@ -79,7 +79,7 @@ describe('Reducer Utils', function () {
     const defaultState = Math.round(1000 * Math.random());
 
     const enhancedReducer = composeAll(
-      withClear(CLEAR),
+      withClear(CLEAR, defaultState),
       (state = defaultState, action = {}) => {
         switch(action.type) {
           case SET:
