@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { withSet, withClear, composeAll, withAdd } from '../src';
+import { withSet, withClear, composeAll, withAdd, withMerge } from '../src';
 import { flowRight as compose } from 'lodash';
 describe('Reducer Utils', function () {
   it('should compose enhancers together', function () {
@@ -44,6 +44,31 @@ describe('Reducer Utils', function () {
     testStateAlt = enhancedReducerAlt(testStateAlt, actionTwo);
 
     expect(testState).to.eql(testStateAlt);
+  });
+
+  it('should support merge', function () {
+
+    const MERGE = 'MERGE';
+
+    const enhancedReducer = composeAll(
+      withMerge(MERGE),
+    )({});
+
+    const values = [
+      {foo: 'test one' },
+      {baz: 10},
+    ];
+
+    let testState = undefined;
+
+    values.forEach(data => {
+      testState = enhancedReducer(testState, {
+        type: MERGE,
+        data
+      });
+    });
+
+    expect(testState).to.eql({ foo: 'test one', baz: 10 })
   });
 
   it('should support set', function () {
