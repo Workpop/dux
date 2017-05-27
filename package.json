@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "lodash": "^4.x.x",
-    "reselect": "^x.x.x"
+    "reselect": "^3.0.0"
   },
   "pre-commit": [
     "lint"
