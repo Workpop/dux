@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/Workpop/dux/compare/v2.0.3...v2.1.0) (2017-06-15)
+
+
+### Features
+
+* **FSA:** make reducers fsa compliant ([1d77e16](https://github.com/Workpop/dux/commit/1d77e16))
+
+
+
 <a name="2.0.3"></a>
 ## [2.0.3](https://github.com/Workpop/dux/compare/v2.0.2...v2.0.3) (2017-04-04)
 
