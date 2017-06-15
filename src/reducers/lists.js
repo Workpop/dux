@@ -1,4 +1,5 @@
 import { isUndefined, filter, reject, findIndex, merge } from 'lodash';
+import { getDataFromAction } from './utils';
 
 /**
  * Rejects values from the array, returning what remains
@@ -102,13 +103,14 @@ export function withFilter(TYPE) {
 export function withAdd(TYPE) {
   return (reducer) => {
     return (state = [], action = {}) => {
+      const data = getDataFromAction(action);
       switch (action.type) {
         case TYPE: {
           const index = findActionIndex(state, action);
           if (index < 0) {
-            return [...state, action.data];
+            return [...state, data];
           }
-          return [...state.slice(0, index), action.data, ...state.slice(index)];
+          return [...state.slice(0, index), data, ...state.slice(index)];
         }
         default:
           return reducer(state, action);
@@ -126,13 +128,14 @@ export function withAdd(TYPE) {
 export function withAddMany(TYPE) {
   return (reducer) => {
     return (state = [], action = {}) => {
+      const data = getDataFromAction(action);
       switch (action.type) {
         case TYPE: {
           const index = findActionIndex(state, action);
           if (index < 0) {
-            return [...state, ...action.data];
+            return [...state, ...data];
           }
-          return [...state.slice(0, index), ...action.data, ...state.slice(index)];
+          return [...state.slice(0, index), ...data, ...state.slice(index)];
         }
         default:
           return reducer(state, action);
@@ -150,13 +153,14 @@ export function withAddMany(TYPE) {
 export function withMergeAt(TYPE) {
   return (reducer) => {
     return (state = [], action = {}) => {
+      const data = getDataFromAction(action);
       switch (action.type) {
         case TYPE: {
           const index = findActionIndex(state, action);
           if (index < 0) {
             return state;
           }
-          const merged = merge(state[index], action.data);
+          const merged = merge(state[index], data);
           return [...state.slice(0, index), merged, ...state.slice(index + 1)];
         }
         default:
@@ -176,13 +180,14 @@ export function withMergeAt(TYPE) {
 export function withSetAt(TYPE) {
   return (reducer) => {
     return (state = [], action = {}) => {
+      const data = getDataFromAction(action);
       switch (action.type) {
         case TYPE: {
           const index = findActionIndex(state, action);
           if (index < 0) {
             return state;
           }
-          return [...state.slice(0, index), action.data, ...state.slice(index + 1)];
+          return [...state.slice(0, index), data, ...state.slice(index + 1)];
         }
         default:
           return reducer(state, action);

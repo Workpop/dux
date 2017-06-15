@@ -1,4 +1,5 @@
 import { merge } from 'lodash';
+import { getDataFromAction } from './utils';
 /**
  * Reducer enhancer that adds a clear case
  * This will call the reducer without arguments, relying on the default part of its method signature
@@ -25,7 +26,7 @@ export function withSet(TYPE) {
     return (state, action = {}) => {
       switch (action.type) {
         case TYPE:
-          return action.data;
+          return getDataFromAction(action);
         default:
           return reducer(state, action);
       }
@@ -42,7 +43,7 @@ export function withMerge(TYPE) {
     return (state = {}, action = {}) => {
       switch (action.type) {
         case TYPE:
-          return {...merge(state, action.data) };
+          return {...merge(state, getDataFromAction(action)) };
         default:
           return reducer(state, action);
       }
