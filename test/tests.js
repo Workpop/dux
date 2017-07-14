@@ -77,6 +77,26 @@ describe('Reducer Utils', function () {
     expect(testState).to.eql({ foo: 'test one', baz: 10 });
   });
 
+  it('should not mutate original state', function () {
+    const MERGE = 'MERGE';
+
+    const enhancedReducer = composeAll(withMerge(MERGE))({});
+
+    const values = [{ foo: 'test one' }, { baz: 10 }];
+
+    let originalState = {};
+    let testState = originalState;
+
+    values.forEach((data) => {
+      testState = enhancedReducer(testState, {
+        type: MERGE,
+        data,
+      });
+    });
+
+    expect(originalState).to.eql({});
+  });
+
   it('should support set', function () {
     const SET = 'SET';
 
