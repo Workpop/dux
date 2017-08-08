@@ -1,4 +1,4 @@
-import { find, filter } from 'lodash';
+import { find, filter, sortBy } from 'lodash';
 import { expect } from 'chai';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { moveEntitiesMiddleware, composeMoveEntities, ENTITY_ACTIONS } from '../src/middleware/moveEntities';
@@ -7,7 +7,11 @@ function basicReducer(state, action) {
   return state;
 }
 
-const testReducer = composeMoveEntities('test')(basicReducer);
+function sortFunc(data) {
+  return sortBy(data, ['name']);
+}
+
+const testReducer = composeMoveEntities('test', undefined, sortFunc)(basicReducer);
 
 const rootReducer = combineReducers({
   test: testReducer,
@@ -18,20 +22,20 @@ const store = createStore(rootReducer, {
   test: {
     data: [
       {
-        _id: '1',
-        name: 'Abhi',
-      },
-      {
-        _id: '3',
-        name: 'Alex',
-      },
-      {
         _id: '6',
         name: 'Matt',
       },
       {
         _id: '2',
         name: 'Bernardo',
+      },
+      {
+        _id: '1',
+        name: 'Abhi',
+      },
+      {
+        _id: '3',
+        name: 'Alex',
       },
     ],
   }
@@ -145,5 +149,35 @@ describe('Move Entities Middleware', function () {
     });
     expect(testMoveItem).to.eql(undefined);
     expect(otherMoveItem).not.to.eql(undefined);
+  });
+
+  it('should sort the newly added item if provided a sort function', function () {
+    store.dispatch({
+      type: 'TEST_ENTITY_OPERATION',
+      operation: ENTITY_ACTIONS.ADD,
+      stateKey: 'test',
+      data: {
+        _id: '5',
+        name: 'Kan'
+      }
+    });
+    const test = store.getState().test.data;
+    expect(sortFunc(test)).to.eql(test);
+  });
+
+  it('should sort the newly moved in item if provided a sort function', function () {
+    store.dispatch({
+      type: 'TEST_ENTITY_OPERATION',
+      operation: ENTITY_ACTIONS.MOVE,
+      stateKey: 'other',
+      destinationKey: 'test',
+      data: {
+        _id: '1',
+        name: 'Abhi'
+      }
+    });
+    const test = store.getState().test.data;
+    const other = store.getState().other.data;
+    expect(sortFunc(test)).to.eql(test);
   });
 });
