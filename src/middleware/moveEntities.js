@@ -1,4 +1,4 @@
-import { get, map, includes, find, isUndefined, reject } from 'lodash';
+import { get, map, includes, find, isUndefined, reject, identity } from 'lodash';
 
 export const ENTITY_ACTIONS = {
   ADD: 'ADD',
@@ -14,7 +14,7 @@ const ENTITY_TYPES = {
 
 //TODO: Integrate the HOC Reducers we have to manipulate this even more
 
-export function composeMoveEntities(stateKey, entityType = ENTITY_TYPES.LIST) {
+export function composeMoveEntities(stateKey, entityType = ENTITY_TYPES.LIST, transformFunc = identity) {
   return (reducer) => {
     return function moveEntities(state, action = {}) {
       let initialState;
@@ -40,7 +40,7 @@ export function composeMoveEntities(stateKey, entityType = ENTITY_TYPES.LIST) {
               return state;
             }
             mergedData = {
-              data: [...currentData, data],
+              data: transformFunc([...currentData, data]),
             };
             return Object.assign({}, currentState, mergedData);
           }
