@@ -1,4 +1,4 @@
-import { merge, cloneDeep } from 'lodash';
+import { merge } from 'lodash';
 import { getDataFromAction } from './utils';
 /**
  * Reducer enhancer that adds a clear case
@@ -43,8 +43,7 @@ export function withMerge(TYPE) {
     return (state = {}, action = {}) => {
       switch (action.type) {
         case TYPE: {
-          const stateClone = cloneDeep(state);
-          return {...merge(stateClone, getDataFromAction(action)) };
+          return merge({}, state, getDataFromAction(action));
         }
         default: {
           return reducer(state, action);
